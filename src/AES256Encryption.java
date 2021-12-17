@@ -17,33 +17,29 @@ public class AES256Encryption {
             InvalidAlgorithmParameterException, InvalidKeyException,
             IllegalBlockSizeException, BadPaddingException {
 
-        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-        keyGenerator.init(256);
+//        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+//        keyGenerator.init(256);
         byte[] key = MessageDigest.getInstance("SHA-256").digest(ENCRYPTION_KEY.getBytes(StandardCharsets.UTF_8));
         SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 
         IvParameterSpec ivKey = new IvParameterSpec(ENCRYPTION_IV.getBytes(StandardCharsets.UTF_8));
 
 
-        //Encrypt Hello world message
+        //Encrypt data
         Cipher encryptionCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
         encryptionCipher.init(Cipher.ENCRYPT_MODE, secretKey, ivKey);
-        String message = SRC_STRING_TO_ENCRYPT;
-        byte[] encryptedMessageBytes =
-                encryptionCipher.doFinal(message.getBytes());
-        String encryptedMessage =
-                Base64.getEncoder().encodeToString(encryptedMessageBytes);
-        System.out.println("Encrypted message = "+encryptedMessage);
+        String data = SRC_STRING_TO_ENCRYPT;
+        byte[] encryptedDataBytes = encryptionCipher.doFinal(data.getBytes());
+        String encryptedData = Base64.getEncoder().encodeToString(encryptedDataBytes);
+        System.out.println("Encrypted Data = " + encryptedData);
 
-        //Decrypt the encrypted message
+        //Decrypt the encrypted data
         Cipher decryptionCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         decryptionCipher.init(Cipher.DECRYPT_MODE, secretKey, ivKey);
-//        byte[] decryptedMessageBytes =
-//                decryptionCipher.doFinal(SRC_STRING_TO_DECRYPT.getBytes());
-        byte[] decryptedMessageBytes =
-                decryptionCipher.doFinal(encryptedMessageBytes);
-        String decryptedMessage = new String(decryptedMessageBytes);
-        System.out.println("decrypted message ="+decryptedMessage);
+        byte[] decryptedDataBytes = decryptionCipher.doFinal(SRC_STRING_TO_DECRYPT.getBytes());
+//        byte[] decryptedDataBytes = decryptionCipher.doFinal(encryptedDataBytes);
+        String decryptedData = new String(decryptedDataBytes);
+        System.out.println("Decrypted Data = " + decryptedData);
     }
 }
